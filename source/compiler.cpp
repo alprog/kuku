@@ -6,6 +6,7 @@
 #include "err/statement_error.h"
 #include "bytecode.h"
 #include "instructions.h"
+#include <algorithm>
 
 bool optimizations = false;
 
@@ -66,15 +67,23 @@ void compiler::exit_scope()
 void compiler::define_local_variable(stmt::symboled_statement_base& statement)
 {
 	auto variable_symbol = statement.get_symbol();
-	variable_symbol->stack_offset = get_scope_context().local_stack_size++;
+	variable_symbol->stack_offset = define_local_variable(variable_symbol->name);
+}
+
+int compiler::define_local_variable(std::u16string name)
+{
+	int stack_offset = get_scope_context().local_stack_size++;
+	current_function->max_locals = std::max(current_function->max_locals, stack_offset + 1);
 
 	rt::localvar_info info;
-	info.name = variable_symbol->name;
-	info.stack_offset = variable_symbol->stack_offset;
+	info.name = name;
+	info.stack_offset = stack_offset;
 	info.type_index = type_index::Integer;
 	info.start_instruction = get_current_place();
 	info.end_instruction = -1;
 	current_function->locals.push_back(info);
+
+	return stack_offset;
 }
 
 void compiler::spawn(base_instruction instruction)
@@ -339,7 +348,7 @@ void compiler::compile(stmt::for_statement& statement)
 	spawn(instruction_SAVEVAR(index));
 
 	// max_value (index + 1)
-	get_scope_context().local_stack_size++;
+	define_local_variable(u"%max");
 	compile(statement.end_expression);
 	spawn(instruction_SAVEVAR(index + 1));
 

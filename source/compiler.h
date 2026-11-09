@@ -24,6 +24,7 @@ public:
 	void enter_scope(scope_type scope_type);
 	void exit_scope();
 	void define_local_variable(stmt::symboled_statement_base& statement);
+	int define_local_variable(std::u16string name);
 	
 	void spawn(base_instruction instruction);
 	void spawn_jump_to_start();

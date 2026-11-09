@@ -16,6 +16,7 @@ namespace rt
         bytecode bytecode;
         std::vector<cell> constant_buffer;
         std::vector<localvar_info> locals;
+        int max_locals = 0;
 
         const localvar_info& get_local_info(int instruction_offset, int stack_offset) const;
 
