@@ -7,20 +7,7 @@
 #define CODES4(X) X, X##_KR, X##_RK, X##_KK
 
 reflectable_enum(opcode, byte,
-	CODES4(ADD),
-	CODES4(SUB),
-	CODES4(MULT),
-	CODES4(DIVIDE),
-	CODES4(POWER),
-	CODES4(EQ),
-	CODES4(NEQ),
-	CODES4(L),
-	CODES4(G),
-	CODES4(LEQ),
-	CODES4(GEQ),
-
-	CODES2(ASSIGN),
-	CODES2(PRINT),
+	PRINT,
 
 	VALUE,
 	CREATE_OBJECT,
@@ -30,5 +17,23 @@ reflectable_enum(opcode, byte,
 	IFJUMP,
 	INC,
 
-	END
+	END,
+
+	//---------
+
+	ADD,
+	SUB,
+	MULT,
+	DIVIDE,
+	POWER,
+	EQ,
+	NEQ,
+	L,
+	G,
+	LEQ,
+	GEQ,
+
+	LOADVAR,
+	SAVEVAR,
+	PUSH_K
 );

@@ -85,64 +85,89 @@ Ins(VALUE, "R(A) = INT(sBx)", AsBx)
 	routine.call_frame.stack[A].integer = sBx;
 }};
 
-Ins(ASSIGN, "R(A) = R(B)", MAB)
+Ins(LOADVAR, "R(A)", A)
 {
-	routine.call_frame.stack[A] = cellB;
+	routine.push(routine.call_frame.stack[A]);
 }};
 
-Ins(ADD, "R(A) = R(B) + R(C)", M2ABC)
+Ins(SAVEVAR, "R(A) =", A)
 {
-	routine.call_frame.stack[A].integer = cellB.integer + cellC.integer;
+	routine.call_frame.stack[A] = routine.pop();
 }};
 
-Ins(SUB, "R(A) = R(B) - R(C)", M2ABC)
+//------------
+
+Ins(ADD, "A + B", NONE)
 {
-	routine.call_frame.stack[A].integer = cellB.integer - cellC.integer;
+	routine.top[-2].integer = routine.top[-2].integer + routine.top[-1].integer;
+	routine.top--;
 }};
 
-Ins(MULT, "R(A) = R(B) * R(C)", M2ABC)
+Ins(SUB, "A - B", NONE)
 {
-	routine.call_frame.stack[A].integer = cellB.integer * cellC.integer;
+	routine.top[-2].integer = routine.top[-2].integer - routine.top[-1].integer;
+	routine.top--;
 }};
 
-Ins(DIVIDE, "R(A) = R(B) / R(C)", M2ABC)
+Ins(MULT, "A * B", NONE)
 {
-	routine.call_frame.stack[A].integer = cellB.integer / cellC.integer;
+	routine.top[-2].integer = routine.top[-2].integer * routine.top[-1].integer;
+	routine.top--;
 }};
 
-Ins(POWER, "R(A) = R(B) ^ R(C)", M2ABC)
+Ins(DIVIDE, "A / B", NONE)
 {
-	routine.call_frame.stack[A].integer = static_cast<integer>(std::pow(cellB.integer, cellC.integer));
+	routine.top[-2].integer = routine.top[-2].integer / routine.top[-1].integer;
+	routine.top--;
 }};
 
-Ins(EQ, "R(A) = R(B) == R(C)", M2ABC)
+Ins(POWER, "A ^ B", NONE)
 {
-	routine.call_frame.stack[A].boolean = cellB == cellC;
+	routine.top[-2].integer = std::pow(routine.top[-2].integer, routine.top[-1].integer);
+	routine.top--;
 }};
 
-Ins(NEQ, "R(A) = R(B) != R(C)", M2ABC)
+Ins(EQ, "A == B", NONE)
 {
-	routine.call_frame.stack[A].boolean = cellB != cellC;
+	routine.top[-2].boolean = routine.top[-2].integer == routine.top[-1].integer;
+	routine.top--;
 }};
 
-Ins(L, "R(A) = R(B) < R(C)", M2ABC)
+Ins(NEQ, "A != B", NONE)
 {
-	routine.call_frame.stack[A].boolean = cellB < cellC;
+	routine.top[-2].boolean = routine.top[-2].integer != routine.top[-1].integer;
+	routine.top--;
 }};
 
-Ins(G, "R(A) = R(B) > R(C)", M2ABC)
+Ins(L, "A < B", NONE)
 {
-	routine.call_frame.stack[A].boolean = cellB > cellC;
+	routine.top[-2].boolean = routine.top[-2].integer < routine.top[-1].integer;
+	routine.top--;
 }};
 
-Ins(LEQ, "R(A) = R(B) <= R(C)", M2ABC)
+Ins(G, "A > B", NONE)
 {
-	routine.call_frame.stack[A].boolean = cellB <= cellC;
+	routine.top[-2].boolean = routine.top[-2].integer > routine.top[-1].integer;
+	routine.top--;
 }};
 
-Ins(GEQ, "R(A) = R(B) >= R(C)", M2ABC)
+Ins(LEQ, "A <= B", NONE)
 {
-	routine.call_frame.stack[A].boolean = cellB >= cellC;
+	routine.top[-2].boolean = routine.top[-2].integer <= routine.top[-1].integer;
+	routine.top--;
+}};
+
+Ins(GEQ, "A >= B", NONE)
+{
+	routine.top[-2].boolean = routine.top[-2].integer >= routine.top[-1].integer;
+	routine.top--;
+}};
+
+//--------------
+
+Ins(PUSH_K, "K(A)", A)
+{
+	routine.push(routine.call_frame.function->constant_buffer[A]);
 }};
 
 Ins(JUMP, "goto JMP(sBx)", sBx)
@@ -150,14 +175,14 @@ Ins(JUMP, "goto JMP(sBx)", sBx)
 	routine.call_frame.ip += sBx;
 }};
 
-Ins(IFJUMP, "if !R(A) then goto JMP(sBx)", AsBx)
+Ins(IFJUMP, "if !TOP then goto JMP(sBx)", sBx)
 {
-	routine.call_frame.ip += routine.call_frame.stack[A].boolean ? 1 : sBx;
+	routine.call_frame.ip += routine.pop().boolean ? 1 : sBx;
 }};
 
-Ins(PRINT, "print R(A)", MAB)
+Ins(PRINT, "print TOP", NONE)
 {
-	std::cout << cellB.integer << std::endl;
+	std::cout << routine.pop().integer << std::endl;
 }};
 
 Ins(CREATE_OBJECT, "R(A) = new CLS(Bx)", ABx)

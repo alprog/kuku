@@ -34,7 +34,6 @@ public:
 	base_instruction& peek();
 	base_instruction pop();
 
-	inline_operand get_top_operand();
 	int get_current_place();
 
 	scope_context& get_loop_context(int level = 1);

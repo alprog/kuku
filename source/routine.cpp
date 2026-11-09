@@ -8,6 +8,7 @@ routine::routine(virtual_machine& vm, rt::function& function)
 	: vm{ vm }
 	, call_frame{ function, &stack.cells[0] }
 {
+	top = call_frame.stack;
 }
 
 void routine::run()

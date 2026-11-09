@@ -30,10 +30,10 @@ void test()
 		virtual_machine machine;
 
 		source_project project;
-		project.add_file("C:/kuku/data/test.kuku");
+		project.add_file("C:/projects/kuku/data/test.kuku");
 		project.process_all();
 
-		chunk chunk = project.get_module("C:/kuku/data/test.kuku")->compile_to_chunk();
+		chunk chunk = project.get_module("C:/projects/kuku/data/test.kuku")->compile_to_chunk();
 
 		for (auto& function : chunk.functions)
 		{

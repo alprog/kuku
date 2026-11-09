@@ -21,6 +21,11 @@ public:
 	std::stack<call_frame> up_frames;
 	call_frame call_frame;
 
+	cell* top;
+
+	inline void push(cell value) { *top++ = value; }
+	inline cell pop() { return *--top; }
+
 	bool running;
 
 	void run();
