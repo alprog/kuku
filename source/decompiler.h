@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 #include "rt/function.h"
 
 class decompiler
@@ -12,9 +13,10 @@ private:
 	std::string get_comment(rt::function& function, int index, base_instruction& instruction);
 	std::string pop_comment();
 	std::string push_comment();
+	void save_stack_comment(std::string comment);
 
 	bool replace(std::string& str, std::string substr, std::string newstr);
 	bool replace(std::string& str, std::string substr, std::string (decompiler::*callback)());
 
-	int stack_size = 0;
+	std::vector<std::string> stack_comments;
 };

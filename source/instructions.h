@@ -175,7 +175,7 @@ Ins(JUMP, "goto JMP(sBx)", sBx)
 	routine.call_frame.ip += sBx;
 }};
 
-Ins(IFJUMP, "if !POP then goto JMP(sBx)", sBx)
+Ins(IFJUMP, "if !(POP) then goto JMP(sBx)", sBx)
 {
 	routine.call_frame.ip += routine.pop().boolean ? 1 : sBx;
 }};

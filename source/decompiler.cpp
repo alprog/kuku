@@ -6,9 +6,11 @@
 #include "instructions.h"
 #include <functional>
 
+bool full_mode = true;
+
 void decompiler::print_instructions(rt::function& function, bool include_comments)
 {
-	stack_size = 0;
+	stack_comments.clear();
 
 	int index = 0;
 	for (auto& instruction : function.bytecode.instructions)
@@ -98,17 +100,37 @@ std::string decompiler::get_comment(rt::function& function, int index, base_inst
 	while (perform_replacement(comment, instruction, "INT", INT)) {}
 	while (perform_replacement(comment, instruction, "JMP", JMP)) {}
 
+	const std::string prefix = "PUSH = ";
+	if (comment.starts_with(prefix))
+	{
+		stack_comments.push_back(comment.substr(prefix.size()));
+	}
+
 	replace(comment, "PUSH", &decompiler::push_comment);
+
+	if (full_mode && comment.starts_with("%"))
+	{
+		comment = "";
+	}
 
 	return comment;
 }
 
 std::string decompiler::pop_comment()
 {
-	return "%" + std::to_string(--stack_size);
+	auto comment = stack_comments[stack_comments.size() - 1];
+	stack_comments.pop_back();
+	if (full_mode)
+	{
+		return comment;
+	}
+	else
+	{
+		return "%" + std::to_string(stack_comments.size());
+	}
 }
 
 std::string decompiler::push_comment()
 {
-	return "%" + std::to_string(stack_size++);
+	return "%" + std::to_string(stack_comments.size());
 }

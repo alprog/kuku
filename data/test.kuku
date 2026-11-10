@@ -30,6 +30,14 @@ function yo()
 	print a
 end
 
+function huh()
+	var a = 17
+	var b = (80 + a) / 2
+	var c = a * a + b * b
+	print c
+
+end
+
 #[
 if 1 then
 	var a = 0
