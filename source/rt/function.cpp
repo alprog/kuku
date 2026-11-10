@@ -1,4 +1,5 @@
 #include "function.h"
+#include "decompiler.h"
 
 #include "console.h"
 #include "unicode.h"
@@ -50,32 +51,11 @@ byte rt::function::add_constant(cell cell)
 void rt::function::full_dump()
 {
 	console::write_line(name);
-	print_instructions(true);
+	decompiler().print_instructions(*this, true);
 	console::new_line();
 	print_constant_buffer();
 	console::new_line();
 	print_locals_info();
-}
-
-void rt::function::print_instructions(bool include_comments)
-{
-	int index = 0;
-	for (auto& instruction : bytecode.instructions)
-	{
-		auto info = jump_table::get_info_function[instruction.I]();
-
-
-		auto comment = get_comment(index, instruction);
-
-		auto line = std::format("{:3} | {:22} | ", index++, info->to_string(instruction));
-
-		if (include_comments)
-		{
-			line += comment;
-		}
-
-		console::write_line(line);
-	}
 }
 
 void rt::function::print_constant_buffer()
@@ -96,64 +76,4 @@ void rt::function::print_locals_info()
 		console::write(record);
 		console::write_line(info.name);
 	}
-}
-
-bool perform_replacement(std::string& comment, base_instruction& instruction, std::string macro_name, std::function<std::string(int)> macro)
-{
-	auto macro_start = comment.find(macro_name + "(");
-	if (macro_start != std::string::npos)
-	{
-		auto macro_end = comment.find(")", macro_start) + 1;
-		auto arg_start = macro_start + macro_name.size() + 1;
-		auto arg_name = comment.substr(arg_start, macro_end - arg_start - 1);
-		auto arg_value = instruction.get_argument_value(arg_name);
-		comment.replace(macro_start, macro_end - macro_start, macro(arg_value));
-		return true;
-	}
-	return false;
-}
-
-void replace(std::string& str, std::string substr, std::string newstr)
-{
-	auto start = str.find(substr);
-	if (start != std::string::npos)
-	{
-		str.replace(start, substr.size(), newstr);
-	}
-}
-
-std::string rt::function::get_comment(int index, base_instruction& instruction)
-{
-	auto info = jump_table::get_info_function[instruction.I]();
-	std::string comment = info->comment;
-	if (info->has_arg(instruction_args::MB) && instruction.MB == instruction_mode::K)
-	{
-		replace(comment, "R(B)", "K(B)");
-	}
-	if (info->has_arg(instruction_args::MC) && instruction.MC == instruction_mode::K)
-	{
-		replace(comment, "R(C)", "K(C)");
-	}
-
-	auto R = [&](int value)
-	{
-		auto name = get_local_info(index, value).name;
-		return std::string(std::begin(name), end(name));
-	};
-
-	auto K = [&](int value) { return std::to_string(constant_buffer[value].integer); };
-
-	auto RK = [&](int value) { return value >> 7 ? K(value - 128) : R(value); };
-
-	auto INT = [&](int value) { return std::to_string(value); };
-
-	auto JMP = [&](int value) { return std::to_string(index + value); };
-
-	while (perform_replacement(comment, instruction, "RK", RK)) {}
-	while (perform_replacement(comment, instruction, "R", R)) {}
-	while (perform_replacement(comment, instruction, "K", K)) {}
-	while (perform_replacement(comment, instruction, "INT", INT)) {}
-	while (perform_replacement(comment, instruction, "JMP", JMP)) {}
-
-	return comment;
 }

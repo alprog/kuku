@@ -23,10 +23,7 @@ namespace rt
         byte add_constant(cell cell);
 
         void full_dump();
-        void print_instructions(bool include_comments);
         void print_constant_buffer();
         void print_locals_info();
-
-        std::string get_comment(int index, base_instruction& instruction);
     };
 }

@@ -85,79 +85,79 @@ Ins(VALUE, "R(A) = INT(sBx)", AsBx)
 	routine.call_frame.stack[A].integer = sBx;
 }};
 
-Ins(LOADVAR, "R(A)", A)
+Ins(LOADVAR, "PUSH = R(A)", A)
 {
 	routine.push(routine.call_frame.stack[A]);
 }};
 
-Ins(SAVEVAR, "R(A) =", A)
+Ins(SAVEVAR, "R(A) = POP", A)
 {
 	routine.call_frame.stack[A] = routine.pop();
 }};
 
 //------------
 
-Ins(ADD, "A + B", NONE)
+Ins(ADD, "PUSH = POP + POP", NONE)
 {
 	routine.top[-2].integer = routine.top[-2].integer + routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(SUB, "A - B", NONE)
+Ins(SUB, "PUSH = POP - POP", NONE)
 {
 	routine.top[-2].integer = routine.top[-2].integer - routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(MULT, "A * B", NONE)
+Ins(MULT, "PUSH = POP * POP", NONE)
 {
 	routine.top[-2].integer = routine.top[-2].integer * routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(DIVIDE, "A / B", NONE)
+Ins(DIVIDE, "PUSH = POP / POP", NONE)
 {
 	routine.top[-2].integer = routine.top[-2].integer / routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(POWER, "A ^ B", NONE)
+Ins(POWER, "PUSH = POP ^ POP", NONE)
 {
 	routine.top[-2].integer = std::pow(routine.top[-2].integer, routine.top[-1].integer);
 	routine.top--;
 }};
 
-Ins(EQ, "A == B", NONE)
+Ins(EQ, "PUSH = POP == POP", NONE)
 {
 	routine.top[-2].boolean = routine.top[-2].integer == routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(NEQ, "A != B", NONE)
+Ins(NEQ, "PUSH = POP != POP", NONE)
 {
 	routine.top[-2].boolean = routine.top[-2].integer != routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(L, "A < B", NONE)
+Ins(L, "PUSH = POP < POP", NONE)
 {
 	routine.top[-2].boolean = routine.top[-2].integer < routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(G, "A > B", NONE)
+Ins(G, "PUSH = POP > POP", NONE)
 {
 	routine.top[-2].boolean = routine.top[-2].integer > routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(LEQ, "A <= B", NONE)
+Ins(LEQ, "PUSH = POP <= POP", NONE)
 {
 	routine.top[-2].boolean = routine.top[-2].integer <= routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(GEQ, "A >= B", NONE)
+Ins(GEQ, "PUSH = POP >= POP", NONE)
 {
 	routine.top[-2].boolean = routine.top[-2].integer >= routine.top[-1].integer;
 	routine.top--;
@@ -165,7 +165,7 @@ Ins(GEQ, "A >= B", NONE)
 
 //--------------
 
-Ins(PUSH_K, "K(A)", A)
+Ins(PUSH_K, "PUSH = K(A)", A)
 {
 	routine.push(routine.call_frame.function->constant_buffer[A]);
 }};
@@ -175,12 +175,12 @@ Ins(JUMP, "goto JMP(sBx)", sBx)
 	routine.call_frame.ip += sBx;
 }};
 
-Ins(IFJUMP, "if !TOP then goto JMP(sBx)", sBx)
+Ins(IFJUMP, "if !POP then goto JMP(sBx)", sBx)
 {
 	routine.call_frame.ip += routine.pop().boolean ? 1 : sBx;
 }};
 
-Ins(PRINT, "print TOP", NONE)
+Ins(PRINT, "print POP", NONE)
 {
 	std::cout << routine.pop().integer << std::endl;
 }};
