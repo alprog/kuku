@@ -25,7 +25,8 @@ struct instruction : base_instruction
 #define BOTH(x) FIRST x SECOND x
 #define DECLARATION(x) FIRST x SECOND x;
 #define INITIALIZATION(x) , SECOND x { SECOND x }
-#define ARGUMENT_META(x) instruction_arg_meta<FIRST x>::get_instance()
+#define ARGUMENT_X(type, name) instruction_arg{ #name, instruction_arg_meta<type>::get_instance() }
+#define ARGUMENT_META(x) ARGUMENT_X x
 
 #define Ins(NAME, COMMENT, ...) \
 	using instruction_##NAME = instruction<opcode::NAME>; \

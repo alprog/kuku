@@ -10,7 +10,7 @@ public:
 	void print_instructions(rt::function& function, bool include_comments);
 
 private:
-	std::string get_comment(rt::function& function, int index, base_instruction& instruction);
+	std::string get_comment(rt::function& function, int offset, byte* ptr);
 	std::string pop_comment();
 	std::string push_comment();
 	void save_stack_comment(std::string comment);

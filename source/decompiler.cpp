@@ -1,4 +1,3 @@
-/*
 #include "decompiler.h"
 
 #include "console.h"
@@ -13,15 +12,17 @@ void decompiler::print_instructions(rt::function& function, bool include_comment
 {
 	stack_comments.clear();
 
-	int index = 0;
-	for (auto& instruction : function.bytecode.instructions)
+	byte* start = function.bytecode.get_start_pointer();
+	byte* end = function.bytecode.get_end_pointer();
+
+	for (byte* ptr = start; ptr < end; ptr += jump_table::get_size_function[*ptr]())
 	{
-		auto info = jump_table::get_info_function[instruction.I]();
+		int offset = (int)(ptr - start);
+		auto info = jump_table::get_info_function[*ptr]();
 
+		auto comment = get_comment(function, offset, ptr);
 
-		auto comment = get_comment(function, index, instruction);
-
-		auto line = std::format("{:3} | {:22} | ", index++, info->to_string(instruction));
+		auto line = std::format("{:3} | {:22} | ", offset, info->to_string(ptr));
 
 		if (include_comments)
 		{
@@ -32,7 +33,7 @@ void decompiler::print_instructions(rt::function& function, bool include_comment
 	}
 }
 
-static bool perform_replacement(std::string& comment, base_instruction& instruction, std::string macro_name, std::function<std::string(int)> macro)
+static bool perform_replacement(std::string& comment, const instruction_info& info, byte* ptr, std::string macro_name, std::function<std::string(int)> macro)
 {
 	auto macro_start = comment.find(macro_name + "(");
 	if (macro_start != std::string::npos)
@@ -40,7 +41,7 @@ static bool perform_replacement(std::string& comment, base_instruction& instruct
 		auto macro_end = comment.find(")", macro_start) + 1;
 		auto arg_start = macro_start + macro_name.size() + 1;
 		auto arg_name = comment.substr(arg_start, macro_end - arg_start - 1);
-		auto arg_value = instruction.get_argument_value(arg_name);
+		auto arg_value = info.get_argument_value(ptr, arg_name);
 		comment.replace(macro_start, macro_end - macro_start, macro(arg_value));
 		return true;
 	}
@@ -69,37 +70,30 @@ bool decompiler::replace(std::string& str, std::string substr, std::string (deco
 	return false;
 }
 
-std::string decompiler::get_comment(rt::function& function, int index, base_instruction& instruction)
+std::string decompiler::get_comment(rt::function& function, int offset, byte* ptr)
 {
-	auto info = jump_table::get_info_function[instruction.I]();
-	std::string comment = info->comment;
-	if (info->has_arg(instruction_args::MB) && instruction.MB == instruction_mode::K)
-	{
-		replace(comment, "R(B)", "K(B)");
-	}
-	if (info->has_arg(instruction_args::MC) && instruction.MC == instruction_mode::K)
-	{
-		replace(comment, "R(C)", "K(C)");
-	}
+	auto& info = *jump_table::get_info_function[*ptr]();
+	int size = (int)jump_table::get_size_function[*ptr]();
+	std::string comment = info.comment;
 
 	auto R = [&](int value)
 	{
-		auto name = function.get_local_info(index, value).name;
-		return std::string(std::begin(name), end(name));
+		auto name = function.get_local_info(offset, value).name;
+		return std::string(std::begin(name), std::end(name));
 	};
 
 	auto K = [&](int value) { return std::to_string(function.constant_buffer[value].integer); };
 
 	auto INT = [&](int value) { return std::to_string(value); };
 
-	auto JMP = [&](int value) { return std::to_string(index + value); };
+	auto JMP = [&](int value) { return std::to_string(offset + size + value); };
 
 	while (replace(comment, "POP", &decompiler::pop_comment)) {}
 
-	while (perform_replacement(comment, instruction, "R", R)) {}
-	while (perform_replacement(comment, instruction, "K", K)) {}
-	while (perform_replacement(comment, instruction, "INT", INT)) {}
-	while (perform_replacement(comment, instruction, "JMP", JMP)) {}
+	while (perform_replacement(comment, info, ptr, "R", R)) {}
+	while (perform_replacement(comment, info, ptr, "K", K)) {}
+	while (perform_replacement(comment, info, ptr, "INT", INT)) {}
+	while (perform_replacement(comment, info, ptr, "JMP", JMP)) {}
 
 	const std::string prefix = "PUSH = ";
 	if (comment.starts_with(prefix))
@@ -135,5 +129,3 @@ std::string decompiler::push_comment()
 {
 	return "%" + std::to_string(stack_comments.size());
 }
-
-*/
