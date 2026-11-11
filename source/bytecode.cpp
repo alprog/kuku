@@ -1,12 +1,12 @@
 
 #include "bytecode.h"
 
-base_instruction* bytecode::get_start_pointer()
+byte* bytecode::get_start_pointer()
 {
-	return &instructions[0];
+	return bytes.data();
 }
 
-base_instruction* bytecode::get_end_pointer()
+byte* bytecode::get_end_pointer()
 {
-	return &instructions[instructions.size()];
+	return bytes.data() + bytes.size();
 }

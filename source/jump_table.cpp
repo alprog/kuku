@@ -1,9 +1,9 @@
 
 #include "jump_table.h"
 #include "instructions.h"
-#include <cassert>
 
 execute_function_ptr jump_table::execute_function[INSTRUCTION_COUNT];
+get_size_function_ptr jump_table::get_size_function[INSTRUCTION_COUNT];
 get_info_function_ptr jump_table::get_info_function[INSTRUCTION_COUNT];
 
 //------------------------------------------------------------------------------
@@ -11,25 +11,15 @@ get_info_function_ptr jump_table::get_info_function[INSTRUCTION_COUNT];
 template <typename T>
 inline void execute_instruction(routine& routine)
 {
-	reinterpret_cast<T*>(routine.call_frame.ip++)->execute(routine);
+	auto instruction = reinterpret_cast<T*>(routine.call_frame.ip);
+	routine.call_frame.ip += sizeof(T);
+	instruction->execute(routine);
 }
 
-template <>
-inline void execute_instruction<instruction_JUMP>(routine& routine)
+template <typename T>
+inline size_t get_size()
 {
-	reinterpret_cast<instruction_JUMP*>(routine.call_frame.ip)->execute(routine);
-}
-
-template <>
-inline void execute_instruction<instruction_IFJUMP>(routine& routine)
-{
-	reinterpret_cast<instruction_IFJUMP*>(routine.call_frame.ip)->execute(routine);
-}
-
-template <>
-inline void execute_instruction<instruction<opcode::IFJUMP, instruction_mode::K>>(routine& routine)
-{
-	reinterpret_cast<instruction<opcode::IFJUMP, instruction_mode::K>*>(routine.call_frame.ip)->execute(routine);
+	return sizeof(T);
 }
 
 template <typename T>
@@ -39,41 +29,13 @@ inline instruction_info* get_info()
 	return &info;
 }
 
-template <int Index, int BaseIndex = Index, instruction_mode mode = instruction_mode::RR>
-void register_instruction_internal()
-{
-	assert(get_name((opcode)Index).starts_with(get_name((opcode)BaseIndex)));
-
-	using instructionT = instruction<(opcode)BaseIndex, mode>;
-	jump_table::execute_function[Index] = execute_instruction<instructionT>;
-	jump_table::get_info_function[Index] = get_info<instructionT>;
-}
-
-constexpr bool contains(instruction_args mask, instruction_args flag)
-{
-	return (mask & flag) == flag;
-}
-
 template <int I>
 void register_instruction()
 {
 	using instructionT = instruction<(opcode)I>;
-	if constexpr (instructionT::args != instruction_args::invalid)
-	{
-		register_instruction_internal<I>();
-	}
-	if constexpr (contains(instructionT::args, instruction_args::MB))
-	{
-		register_instruction_internal<I + 1, I, instruction_mode::KR>();
-	}
-	if constexpr (contains(instructionT::args, instruction_args::MC))
-	{
-		register_instruction_internal<I + 2, I, instruction_mode::RK>();
-	}
-	if constexpr (contains(instructionT::args, instruction_args::M2))
-	{
-		register_instruction_internal<I + 3, I, instruction_mode::KK>();
-	}
+	jump_table::execute_function[I] = execute_instruction<instructionT>;
+	jump_table::get_size_function[I] = get_size<instructionT>;
+	jump_table::get_info_function[I] = get_info<instructionT>;
 };
 
 template <int I>
@@ -93,8 +55,3 @@ void jump_table::init()
 {
 	register_instruction_recursive<255>();
 }
-
-//------------------------------------------------------------------------------
-
-
-

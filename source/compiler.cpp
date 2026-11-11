@@ -48,8 +48,8 @@ void compiler::exit_scope()
 {
 	for (auto& jump_place : get_scope_context().jump_to_end_places)
 	{
-		int jump_offset = get_current_place() - jump_place;
-		reinterpret_cast<instruction_JUMP*>(&current_function->bytecode.instructions[jump_place])->sBx = jump_offset;
+		int jump_offset = get_current_place() - (jump_place + (int)sizeof(instruction_JUMP));
+		reinterpret_cast<instruction_JUMP*>(&current_function->bytecode.bytes[jump_place])->sBx = jump_offset;
 	}
 
 	scope_contexts.pop();
@@ -86,11 +86,6 @@ int compiler::define_local_variable(std::u16string name)
 	return stack_offset;
 }
 
-void compiler::spawn(base_instruction instruction)
-{
-	current_function->bytecode.instructions.push_back(instruction);
-}
-
 void compiler::spawn_jump_to_start()
 {
 	spawn_jump_to_start(get_scope_context());
@@ -98,7 +93,7 @@ void compiler::spawn_jump_to_start()
 
 void compiler::spawn_jump_to_start(scope_context& scope_context)
 {
-	int offset = scope_context.start_place - get_current_place();
+	int offset = scope_context.start_place - (get_current_place() + (int)sizeof(instruction_JUMP));
 	spawn(instruction_JUMP(offset));
 }
 
@@ -111,19 +106,6 @@ void compiler::spawn_jump_to_end(scope_context& scope_context)
 {
 	scope_context.jump_to_end_places.push_back(get_current_place());
 	spawn(instruction_JUMP(0));
-}
-
-base_instruction& compiler::peek()
-{
-	auto& instructions = current_function->bytecode.instructions;
-	return instructions[instructions.size() - 1];
-}
-
-base_instruction compiler::pop()
-{
-	base_instruction result = peek();
-	current_function->bytecode.instructions.pop_back();
-	return result;
 }
 
 opcode opeartor_token_to_opcode(token_type token_type)
@@ -170,7 +152,7 @@ opcode opeartor_token_to_opcode(token_type token_type)
 
 int compiler::get_current_place()
 {
-	return current_function->bytecode.instructions.size();
+	return current_function->bytecode.bytes.size();
 }
 
 scope_context& compiler::get_loop_context(int level)
@@ -242,8 +224,7 @@ void compiler::compile(ast::symbol_expression& expression)
 template<>
 void compiler::compile(ast::binary_operator_expression& expression)
 {
-	base_instruction instruction;
-	instruction.opcode = opeartor_token_to_opcode(expression.op.token_type);
+	base_instruction instruction{ opeartor_token_to_opcode(expression.op.token_type) };
 	compile(expression.left);
 	compile(expression.right);
 	spawn(instruction);
@@ -353,7 +334,7 @@ void compiler::compile(stmt::for_statement& statement)
 	spawn(instruction_SAVEVAR(index + 1));
 
 
-	spawn(instruction_JUMP(2));
+	spawn(instruction_JUMP(sizeof(instruction_INC)));
 
 	get_scope_context().start_place = get_current_place();
 

@@ -2,13 +2,21 @@
 
 #include "types.h"
 #include <vector>
-#include "base_instruction.h"
+#include <cstring>
 
 class bytecode
 {
 public:
-	std::vector<base_instruction> instructions;
+	std::vector<byte> bytes;
 
-	base_instruction* get_start_pointer();
-	base_instruction* get_end_pointer();
+	byte* get_start_pointer();
+	byte* get_end_pointer();
+
+	template<typename T>
+	void write(const T& value)
+	{
+		size_t end = bytes.size();
+		bytes.resize(end + sizeof(T));
+		memcpy(&bytes[end], &value, sizeof(T));
+	}
 };

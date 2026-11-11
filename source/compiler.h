@@ -26,14 +26,16 @@ public:
 	void define_local_variable(stmt::symboled_statement_base& statement);
 	int define_local_variable(std::u16string name);
 	
-	void spawn(base_instruction instruction);
+	template<typename T>
+	void spawn(const T& instruction)
+	{
+		current_function->bytecode.write(instruction);
+	}
+
 	void spawn_jump_to_start();
 	void spawn_jump_to_start(scope_context& scope_context);
 	void spawn_jump_to_end();
 	void spawn_jump_to_end(scope_context& scope_context);
-
-	base_instruction& peek();
-	base_instruction pop();
 
 	int get_current_place();
 

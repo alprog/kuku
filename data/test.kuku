@@ -1,4 +1,12 @@
 
+function huh()
+	var a = 17
+	var b = (80 + a) / 2
+	var c = a * a + b * b
+	print c
+
+end
+
 function foo():int
 	var a = 3
 	var b = 4
@@ -30,13 +38,7 @@ function yo()
 	print a
 end
 
-function huh()
-	var a = 17
-	var b = (80 + a) / 2
-	var c = a * a + b * b
-	print c
 
-end
 
 #[
 if 1 then

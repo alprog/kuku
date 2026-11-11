@@ -5,159 +5,128 @@
 #include <iostream>
 #include "instruction_info.h"
 #include "virtual_machine.h"
-#include "instruction_args.h"
 #include "preprocessor/for_each.h"
-#include "protected_instruction.h"
-#include "instruction_info.h"
 
-#pragma warning( disable : 4003 )
-
-#define MACRO_ARG_A (uint8_t, A)
-#define MACRO_ARG_B (uint8_t, B)
-#define MACRO_ARG_C (uint8_t, C)
-#define MACRO_ARG_Bx (uint16_t, Bx)
-#define MACRO_ARG_sBx (int16_t, sBx)
-#define MACRO_ARG_MB (instruction_mode, MB)
-#define MACRO_ARG_M2 (instruction_mode, M2)
-
-#define MACRO_ARGS_NONE
-#define MACRO_ARGS_A     MACRO_ARG_A
-#define MACRO_ARGS_AB    MACRO_ARG_A, MACRO_ARG_B
-#define MACRO_ARGS_MAB   MACRO_ARG_MB, MACRO_ARG_A, MACRO_ARG_B
-#define MACRO_ARGS_ABx   MACRO_ARG_A, MACRO_ARG_Bx
-#define MACRO_ARGS_sBx   MACRO_ARG_sBx
-#define MACRO_ARGS_AsBx  MACRO_ARG_A, MACRO_ARG_sBx
-#define MACRO_ARGS_ABC   MACRO_ARG_A, MACRO_ARG_B, MACRO_ARG_C
-
-#define MACRO_ARGS_M2ABC MACRO_ARG_M2, MACRO_ARG_A, MACRO_ARG_B, MACRO_ARG_C
-
-#define FIRST(first, second) first
-#define SECOND(first, second) second
-#define BOTH(x) FIRST x SECOND x
-#define USING(x) using base_instruction::SECOND x;
-#define INITIALIZATION(x) this->SECOND x = SECOND x;
-#define ARGUMENT(x) | CONCATENATE(instruction_args::, SECOND x)
-
-template <opcode, instruction_mode MODE = instruction_mode::RR>
-struct instruction : private protected_instruction
+template <opcode Code>
+struct instruction : base_instruction
 {
+	instruction() : base_instruction{ Code } {};
+
+	static instruction_info create_info() { return { Code, "unknown" }; }
+
 	inline void execute(routine& routine)
 	{
 		throw std::exception("not implemented");
 	}
-
-	static instruction_info create_info()
-	{
-		return { opcode::END, "unknown", "", instruction_args::NONE};
-	}
-
-	static const instruction_args args = instruction_args::invalid;
-
-	inline static instruction_info info = { opcode::END, "", args };
 };
 
-#define Ins_X(NAME, COMMENT, ...) \
-using instruction_##NAME = instruction<opcode::NAME>; \
-template<instruction_mode MODE> \
-struct instruction<opcode::NAME, MODE> : public protected_instruction \
-{ \
-	using base_instruction::opcode; \
-	FOR_EACH(USING, __VA_ARGS__) \
-	instruction( FOR_EACH_WITH_COMMA(BOTH, __VA_ARGS__) ) \
-	{ \
-		opcode = opcode::NAME; \
-		FOR_EACH(INITIALIZATION, __VA_ARGS__) \
-	} \
-	instruction(instruction<opcode::NAME>&&) = delete; \
-	static const instruction_args args = instruction_args::NONE FOR_EACH(ARGUMENT, __VA_ARGS__); \
-	static instruction_info create_info() { return { opcode::NAME, COMMENT, args }; } \
-	inline void execute(routine& routine)
+#define FIRST(first, second) first
+#define SECOND(first, second) second
+#define BOTH(x) FIRST x SECOND x
+#define DECLARATION(x) FIRST x SECOND x;
+#define INITIALIZATION(x) , SECOND x { SECOND x }
+#define ARGUMENT_META(x) instruction_arg_meta<FIRST x>::get_instance()
 
-#define Ins(NAME, COMMENT, ARGUMENTS) Ins_X(NAME, COMMENT, EXPAND(CONCATENATE(MACRO_ARGS_, ARGUMENTS)))
+#define Ins(NAME, COMMENT, ...) \
+	using instruction_##NAME = instruction<opcode::NAME>; \
+	template<> \
+	struct instruction<opcode::NAME> : base_instruction \
+	{ \
+		FOR_EACH(DECLARATION, __VA_ARGS__) \
+		instruction( FOR_EACH_WITH_COMMA(BOTH, __VA_ARGS__) ) \
+			: base_instruction{ opcode::NAME } \
+			FOR_EACH(INITIALIZATION, __VA_ARGS__) \
+		{ \
+		} \
+		static instruction_info create_info() { return { opcode::NAME, COMMENT, { FOR_EACH_WITH_COMMA(ARGUMENT_META, __VA_ARGS__) } }; } \
+		inline void execute(routine& routine)
+
+#define U8(name) (uint8_t, name)
+#define U16(name) (uint16_t, name)
+#define S16(name) (int16_t, name)
+
+#pragma pack(push, 1)
 
 //--------------------------------------------------------------------------------------------
 
-#define cellB static_cast<cell&>( routine.call_frame.get_cell<MODE & 1>(B) )
-#define cellC static_cast<cell&>( routine.call_frame.get_cell<(MODE >> 1 & 1)>(C) )
-
-Ins(VALUE, "R(A) = INT(sBx)", AsBx)
+Ins(VALUE, "R(A) = INT(sBx)", U8(A), S16(sBx))
 {
 	routine.call_frame.stack[A].integer = sBx;
 }};
 
-Ins(LOADVAR, "PUSH = R(A)", A)
+Ins(LOADVAR, "PUSH = R(A)", U8(A))
 {
 	routine.push(routine.call_frame.stack[A]);
 }};
 
-Ins(SAVEVAR, "R(A) = POP", A)
+Ins(SAVEVAR, "R(A) = POP", U8(A))
 {
 	routine.call_frame.stack[A] = routine.pop();
 }};
 
 //------------
 
-Ins(ADD, "PUSH = POP + POP", NONE)
+Ins(ADD, "PUSH = POP + POP")
 {
 	routine.top[-2].integer = routine.top[-2].integer + routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(SUB, "PUSH = POP - POP", NONE)
+Ins(SUB, "PUSH = POP - POP")
 {
 	routine.top[-2].integer = routine.top[-2].integer - routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(MULT, "PUSH = POP * POP", NONE)
+Ins(MULT, "PUSH = POP * POP")
 {
 	routine.top[-2].integer = routine.top[-2].integer * routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(DIVIDE, "PUSH = POP / POP", NONE)
+Ins(DIVIDE, "PUSH = POP / POP")
 {
 	routine.top[-2].integer = routine.top[-2].integer / routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(POWER, "PUSH = POP ^ POP", NONE)
+Ins(POWER, "PUSH = POP ^ POP")
 {
 	routine.top[-2].integer = std::pow(routine.top[-2].integer, routine.top[-1].integer);
 	routine.top--;
 }};
 
-Ins(EQ, "PUSH = POP == POP", NONE)
+Ins(EQ, "PUSH = POP == POP")
 {
 	routine.top[-2].boolean = routine.top[-2].integer == routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(NEQ, "PUSH = POP != POP", NONE)
+Ins(NEQ, "PUSH = POP != POP")
 {
 	routine.top[-2].boolean = routine.top[-2].integer != routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(L, "PUSH = POP < POP", NONE)
+Ins(L, "PUSH = POP < POP")
 {
 	routine.top[-2].boolean = routine.top[-2].integer < routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(G, "PUSH = POP > POP", NONE)
+Ins(G, "PUSH = POP > POP")
 {
 	routine.top[-2].boolean = routine.top[-2].integer > routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(LEQ, "PUSH = POP <= POP", NONE)
+Ins(LEQ, "PUSH = POP <= POP")
 {
 	routine.top[-2].boolean = routine.top[-2].integer <= routine.top[-1].integer;
 	routine.top--;
 }};
 
-Ins(GEQ, "PUSH = POP >= POP", NONE)
+Ins(GEQ, "PUSH = POP >= POP")
 {
 	routine.top[-2].boolean = routine.top[-2].integer >= routine.top[-1].integer;
 	routine.top--;
@@ -165,38 +134,42 @@ Ins(GEQ, "PUSH = POP >= POP", NONE)
 
 //--------------
 
-Ins(PUSH_K, "PUSH = K(A)", A)
+Ins(PUSH_K, "PUSH = K(A)", U8(A))
 {
 	routine.push(routine.call_frame.function->constant_buffer[A]);
 }};
 
-Ins(JUMP, "goto JMP(sBx)", sBx)
+// ip already points to the next instruction, so offsets are relative to it
+Ins(JUMP, "goto JMP(sBx)", S16(sBx))
 {
 	routine.call_frame.ip += sBx;
 }};
 
-Ins(IFJUMP, "if !(POP) then goto JMP(sBx)", sBx)
+Ins(IFJUMP, "if !(POP) then goto JMP(sBx)", S16(sBx))
 {
-	routine.call_frame.ip += routine.pop().boolean ? 1 : sBx;
+	if (!routine.pop().boolean)
+	{
+		routine.call_frame.ip += sBx;
+	}
 }};
 
-Ins(PRINT, "print POP", NONE)
+Ins(PRINT, "print POP")
 {
 	std::cout << routine.pop().integer << std::endl;
 }};
 
-Ins(CREATE_OBJECT, "R(A) = new CLS(Bx)", ABx)
+Ins(CREATE_OBJECT, "R(A) = new CLS(Bx)", U8(A), U16(Bx))
 {
 	routine.call_frame.stack[A].object_index = routine.vm.object_storage.create_object(Bx);
 }};
 
-Ins(SET_FIELD, "R(A).FLD(B) = R(C)", ABC)
+Ins(SET_FIELD, "R(A).FLD(B) = R(C)", U8(A), U8(B), U8(C))
 {
 	object_index object_index = routine.call_frame.stack[A].object_index;
 	routine.vm.object_storage.get_object(object_index).data[B] = routine.call_frame.stack[C];
 }};
 
-Ins(VIRTUAL_CALL, "call FNC(B) with INT(A) args", AB)
+Ins(VIRTUAL_CALL, "call FNC(B) with INT(A) args", U8(A), U8(B))
 {
 	cell* frame_start = &routine.call_frame.stack[-A];
 	object_header& self = routine.vm.object_storage.get_object(frame_start->object_index);
@@ -205,12 +178,14 @@ Ins(VIRTUAL_CALL, "call FNC(B) with INT(A) args", AB)
 	routine.push_call_frame(function, frame_start);
 }};
 
-Ins(INC, "R(A) += 1", A)
+Ins(INC, "R(A) += 1", U8(A))
 {
 	routine.call_frame.stack[A].integer++;
 }};
 
-Ins(END, "end", NONE)
+Ins(END, "end")
 {
 	routine.stop();
 }};
+
+#pragma pack(pop)

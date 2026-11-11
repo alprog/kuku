@@ -1,6 +1,7 @@
 #pragma once
 
 #include "rt/function.h"
+#include "instruction_mode.h"
 
 union cell;
 
@@ -9,7 +10,7 @@ struct call_frame
 	explicit call_frame(rt::function& function, cell* stack);
 	
 	rt::function* function;
-	base_instruction* ip;
+	byte* ip;
 	
 	union
 	{

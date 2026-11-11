@@ -1,5 +1,5 @@
 #include "function.h"
-#include "decompiler.h"
+//#include "decompiler.h"
 
 #include "console.h"
 #include "unicode.h"
@@ -51,7 +51,7 @@ byte rt::function::add_constant(cell cell)
 void rt::function::full_dump()
 {
 	console::write_line(name);
-	decompiler().print_instructions(*this, true);
+	//decompiler().print_instructions(*this, true);
 	console::new_line();
 	print_constant_buffer();
 	console::new_line();

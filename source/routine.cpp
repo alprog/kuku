@@ -26,7 +26,7 @@ void routine::perform_instruction()
 {
 	while (running)
 	{
-		jump_table::execute_function[call_frame.ip->I](*this);
+		jump_table::execute_function[*call_frame.ip](*this);
 	}
 }
 

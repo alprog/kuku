@@ -1,3 +1,4 @@
+/*
 #include "decompiler.h"
 
 #include "console.h"
@@ -134,3 +135,5 @@ std::string decompiler::push_comment()
 {
 	return "%" + std::to_string(stack_comments.size());
 }
+
+*/
