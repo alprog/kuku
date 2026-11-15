@@ -8,9 +8,9 @@ rt::user_class::user_class(std::string name)
 {
 }
 
-rt::field& rt::user_class::register_field(std::string name, data_type data_type)
+rt::property& rt::user_class::register_field(std::string name, data_type data_type)
 {
-    return fields.emplace_back(*this, name, data_type, instance_size++);
+    return properties.emplace_back(*this, name, data_type, instance_size++);
 }
 
 instance rt::user_class::create_instance()
@@ -26,9 +26,9 @@ void rt::user_class::dump(instance instance)
     std::cout << sizeof(instance) << std::endl;
 
     std::cout << instance.cells[0].class_pointer->name << std::endl;
-    for (auto& field : fields)
+    for (auto& property : properties)
     {
-        auto value = instance.cells[field.instance_offset].number;
-        std::cout << field.name << " " << value << std::endl;
+        auto value = instance.cells[property.instance_offset].number;
+        std::cout << property.name << " " << value << std::endl;
     }
 }

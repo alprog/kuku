@@ -172,11 +172,11 @@ Ins(SET_FIELD, "R(A).FLD(B) = R(C)", U8(A), U8(B), U8(C))
 
 Ins(VIRTUAL_CALL, "call FNC(B) with INT(A) args", U8(A), U8(B))
 {
-	cell* frame_start = &routine.call_frame.stack[-A];
-	object_header& self = routine.vm.object_storage.get_object(frame_start->object_index);
-	rt::user_class& self_class = routine.vm.type_registry.classes[self.class_index];
-	rt::function& function = self_class.vtable[B];
-	routine.push_call_frame(function, frame_start);
+	//cell* frame_start = &routine.call_frame.stack[-A];
+	//object_header& self = routine.vm.object_storage.get_object(frame_start->object_index);
+	//rt::user_class& self_class = routine.vm.type_registry.classes[self.class_index];
+	//rt::function& function = self_class.vtable[B];
+	//routine.push_call_frame(function, frame_start);
 }};
 
 Ins(INC, "R(A) += 1", U8(A))

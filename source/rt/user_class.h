@@ -2,9 +2,9 @@
 
 #include <string>
 #include <vector>
-#include "rt/function.h"
+#include "function.h"
 #include "data_type.h"
-#include "field.h"
+#include "property.h"
 #include "instance.h"
 
 namespace rt
@@ -16,14 +16,13 @@ namespace rt
 
         std::string name;
 
-        field& register_field(std::string name, data_type data_type);
+        property& register_field(std::string name, data_type data_type);
         instance create_instance();
 
         void dump(instance instance);
 
         int instance_size;
 
-        std::vector<field> fields;
-        std::vector<function> vtable;
+        std::vector<property> properties;
     };
 }

@@ -7,10 +7,10 @@ namespace rt
 {
     class user_class;
 
-    class field
+    class property
     {
     public:
-        field(user_class& owner_class, std::string name, data_type type, int instance_offset);
+        property(user_class& owner_class, std::string name, data_type type, int instance_offset);
 
         user_class& owner_class;
         data_type type;
