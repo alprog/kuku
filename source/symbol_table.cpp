@@ -1,16 +1,26 @@
 
 #include "symbol_table.h"
 
-short symbol_table::to_index(symbol* symbol)
-{
-	auto it = indices.find(symbol);
-	if (it != std::end(indices))
-	{
-		return it->second;
-	}
+#define XXH_INLINE_ALL
+#include "xxhash.h"
 
-	short index = symbols.size();
-	symbols.push_back({ index, symbol->name, symbol });
-	indices[symbol] = index;
-	return index;
+uint64_t symbol_table::getHash(const std::string& name) const
+{
+	return XXH3_64bits(name.data(), name.size());
+}
+
+uint16_t symbol_table::getValue(const std::string& name) const
+{
+	return getValue(getHash(name));
+}
+
+uint16_t symbol_table::getValue(uint64_t hash) const
+{
+	auto it = symbol_table.find(hash);
+	return it != std::end(symbol_table) ? it->second : -1;
+}
+
+void symbol_table::setValue(uint64_t hash, uint16_t value)
+{
+	symbol_table[hash] = value;
 }

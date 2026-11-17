@@ -6,15 +6,26 @@
 namespace rt
 {
     class user_class;
+    class function;
+
+    enum class property_mode
+    {
+        direct,
+        virtualized,
+        getter
+    };
 
     class property
     {
     public:
-        property(user_class& owner_class, std::string name, data_type type, int instance_offset);
+        std::string name;
+
+        property_mode mode;
+        user_class* type;
+
+        int offset; // direct mode
+        function* function; // getter
 
         user_class& owner_class;
-        data_type type;
-        std::string name;
-        int instance_offset;
     };
 }

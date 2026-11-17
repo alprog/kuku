@@ -8,10 +8,10 @@ rt::user_class::user_class(std::string name)
 {
 }
 
-rt::property& rt::user_class::register_field(std::string name, data_type data_type)
-{
-    return properties.emplace_back(*this, name, data_type, instance_size++);
-}
+//rt::property& rt::user_class::register_field(std::string name, data_type data_type)
+//{
+//    return properties.emplace_back(*this, name, data_type, instance_size++);
+//}
 
 instance rt::user_class::create_instance()
 {
@@ -28,7 +28,7 @@ void rt::user_class::dump(instance instance)
     std::cout << instance.cells[0].class_pointer->name << std::endl;
     for (auto& property : properties)
     {
-        auto value = instance.cells[property.instance_offset].number;
-        std::cout << property.name << " " << value << std::endl;
+        auto value = instance.cells[property->offset].number;
+        std::cout << property->name << " " << value << std::endl;
     }
 }

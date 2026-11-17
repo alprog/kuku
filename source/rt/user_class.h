@@ -16,13 +16,13 @@ namespace rt
 
         std::string name;
 
-        property& register_field(std::string name, data_type data_type);
+        //property& register_field(std::string name, data_type data_type);
         instance create_instance();
 
         void dump(instance instance);
 
         int instance_size;
 
-        std::vector<property> properties;
+        std::vector<property*> properties;
     };
 }
