@@ -36,7 +36,7 @@ void language_server::process_message(json::object& message)
     else if (method == "textDocument/codeAction")
         on_code_action(message);
     else if (method == "workspace/executeCommand")
-        on_execute_WITH_COMMAnd(message);
+        on_execute_with_command(message);
     else if (method == "textDocument/completion")
         on_completion(message);
     else if (method == "$/cancelRequest")
@@ -244,7 +244,7 @@ void language_server::on_code_action(json::object& message)
     ide_connection << response;
 }
 
-void language_server::on_execute_WITH_COMMAnd(json::object& message)
+void language_server::on_execute_with_command(json::object& message)
 {
     auto id = message["id"].get<int>();
     auto command_name = message["params"]["command"].get<std::string>();

@@ -17,7 +17,7 @@ private:
 	void on_did_change(json::object& message);
 	void on_hover(json::object& message);
 	void on_code_action(json::object& message);
-	void on_execute_WITH_COMMAnd(json::object& message);
+	void on_execute_with_command(json::object& message);
 	void on_completion(json::object& message);
 
 	void show_message(std::string text);
