@@ -179,17 +179,6 @@ scope_context& compiler::get_scope_context()
 
 //---------------------------------------------------------------------------------------------------------------
 
-bool has_regA(opcode code)
-{
-	switch (code)
-	{
-		case opcode::VALUE:
-			return true;
-	}
-
-	return false;
-}
-
 template<typename T>
 void compiler::compile(T& value)
 {
