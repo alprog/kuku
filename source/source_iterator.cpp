@@ -1,6 +1,6 @@
 
 #include "source_iterator.h"
-#include "unicode.h"
+#include "unicode/unicode.h"
 #include "text_document.h"
 
 source_iterator::source_iterator(::text_document& text_document)

@@ -22,6 +22,7 @@
 #include "guid.h"
 
 #include "console.h"
+#include "export_loader.h"
 
 void test()
 {
@@ -41,6 +42,8 @@ void test()
 
 			console::new_line();
 		}
+
+		export_loader(machine.type_registry).load_test();
 
 		console::read_line();
 

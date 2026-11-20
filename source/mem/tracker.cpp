@@ -1,7 +1,7 @@
 
 #include "tracker.h"
 #include "console.h"
-#include "unicode.h"
+#include "unicode/unicode.h"
 
 mem::tracker mem::tracker::instance;
 

@@ -17,7 +17,7 @@ uint16_t symbol_table::getValue(const std::string& name) const
 uint16_t symbol_table::getValue(uint64_t hash) const
 {
 	auto it = symbol_table.find(hash);
-	return it != std::end(symbol_table) ? it->second : -1;
+	return it != std::end(symbol_table) ? it->second : invalid_index;
 }
 
 void symbol_table::setValue(uint64_t hash, uint16_t value)

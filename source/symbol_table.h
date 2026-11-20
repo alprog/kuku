@@ -11,6 +11,8 @@ struct identity_hash
 class symbol_table
 {
 public:
+	static constexpr uint16_t invalid_index = 0xFFFF;
+
 	uint64_t getHash(const std::string& name) const;
 
 	uint16_t getValue(const std::string& name) const;

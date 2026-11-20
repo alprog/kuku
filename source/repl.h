@@ -4,7 +4,7 @@
 #include "lexer.h";
 #include "console.h"
 #include "types.h"
-#include "unicode.h"
+#include "unicode/unicode.h"
 #include "text_document.h"
 #include <sstream>
 

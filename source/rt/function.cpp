@@ -2,10 +2,9 @@
 #include "decompiler.h"
 
 #include "console.h"
-#include "unicode.h"
+#include "unicode/unicode.h"
 #include <format>
 #include "jump_table.h"
-#include "unicode.h"
 #include "instructions.h"
 #include <functional>
 

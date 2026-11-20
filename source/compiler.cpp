@@ -7,6 +7,7 @@
 #include "bytecode.h"
 #include "instructions.h"
 #include <algorithm>
+#include "unicode/unicode.h"
 
 bool optimizations = false;
 
@@ -36,7 +37,7 @@ void compiler::compile()
 void compiler::start_new_function(std::u16string name)
 {
 	current_function = &chunk.functions.emplace_back();
-	current_function->name = name;
+	current_function->name = std::string(name.begin(), name.end());
 }
 
 void compiler::enter_scope(scope_type scope_type)
