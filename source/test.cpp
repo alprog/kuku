@@ -2,7 +2,7 @@
 #include "test.h"
 
 #include "streams.h"
-#include "unicode_streams.h"
+#include "unicode/unicode_streams.h"
 #include "text_document.h"
 #include <fstream>
 #include "parser.h"
@@ -30,11 +30,15 @@ void test()
 	{
 		virtual_machine machine;
 
+		std::string test_file_path = "C:/projects/kuku/data/main.kuku";
+
 		source_project project;
-		project.add_file("C:/projects/kuku/data/test.kuku");
+		project.add_file(test_file_path);
 		project.process_all();
 
-		chunk chunk = project.get_module("C:/projects/kuku/data/test.kuku")->compile_to_chunk();
+
+
+		chunk chunk = project.get_module(test_file_path)->compile_to_chunk();
 
 		for (auto& function : chunk.functions)
 		{
@@ -45,6 +49,7 @@ void test()
 
 		export_loader(machine.type_registry).load_test();
 
+		console::write_line(project.get_module(test_file_path)->export_text);
 		console::read_line();
 
 		auto& routine = machine.create_routine(chunk.functions[0]);

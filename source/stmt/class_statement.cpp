@@ -1,6 +1,7 @@
 
 #include "class_statement.h"
 #include "symbol_reference.h"
+#include "compiler.h"
 
 void stmt::class_statement::parse_internal(parser& parser)
 {
@@ -11,4 +12,9 @@ void stmt::class_statement::parse_internal(parser& parser)
 void stmt::class_statement::define_symbols(statement_scope* scope)
 {
 	scope->define_symbol(symbol);
+}
+
+void stmt::class_statement::compile(compiler& compiler)
+{
+	compiler.compile(*this);
 }

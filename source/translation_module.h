@@ -22,6 +22,7 @@ public:
 	void tokenize();
 	void parse_statements();
 	void analyze_scope();
+	void create_export();
 	void analyze_semantic();
 	void compile();
 	chunk compile_to_chunk();
@@ -43,5 +44,7 @@ public:
 	std::vector<stmt::statement*> statements; // own
 
 	statement_scope root_scope;
+
+	std::string export_text;
 
 };

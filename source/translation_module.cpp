@@ -5,6 +5,7 @@
 #include "console.h"
 #include "scope_analyzer.h"
 #include "semantic_analyzer.h"
+#include "export_creator.h"
 #include "compiler.h"
 #include "err/error.h"
 
@@ -26,6 +27,7 @@ void translation_module::process()
     tokenize();
     parse_statements();
     analyze_scope();
+    create_export();
     analyze_semantic();
 }
 
@@ -81,6 +83,12 @@ void translation_module::analyze_scope()
 {
     scope_analyzer analyzer(*this);
     analyzer.analyze();
+}
+
+void translation_module::create_export()
+{
+    export_creator creator(*this);
+    export_text = creator.create();
 }
 
 void translation_module::analyze_semantic()

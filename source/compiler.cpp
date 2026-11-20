@@ -246,6 +246,12 @@ void compiler::compile(stmt::expression_statement& statement)
 }
 
 template<>
+void compiler::compile(stmt::class_statement& statement)
+{
+	enter_scope(statement.inner_scope.type);
+}
+
+template<>
 void compiler::compile(stmt::function_statement& statement)
 {
 	start_new_function(statement.symbol->name);
