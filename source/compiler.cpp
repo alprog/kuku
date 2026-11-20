@@ -40,11 +40,18 @@ void compiler::start_new_function(std::u16string name)
 
 void compiler::enter_scope(scope_type scope_type)
 {
-	scope_contexts.push_emplace(scope_type, get_current_place(), get_scope_context().local_stack_size);
+	int start_place = scope_type == scope_type::class_body ? 0 : get_current_place();
+	scope_contexts.push_emplace(scope_type, start_place, get_scope_context().local_stack_size);
 }
 
 void compiler::exit_scope()
 {
+	if (get_scope_context().scope_type == scope_type::class_body)
+	{
+		scope_contexts.pop();
+		return;
+	}
+
 	for (auto& jump_place : get_scope_context().jump_to_end_places)
 	{
 		int jump_offset = get_current_place() - (jump_place + (int)sizeof(instruction_JUMP));
