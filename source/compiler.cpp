@@ -9,8 +9,6 @@
 #include <algorithm>
 #include "unicode/unicode.h"
 
-bool optimizations = false;
-
 compiler::compiler(translation_module& module)
 	: module{ module }
 {

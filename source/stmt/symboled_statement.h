@@ -4,7 +4,6 @@
 #include "stmt/statement.h"
 #include "symbol/symbol.h"
 #include "symbol_reference.h"
-#include "typesystem/info.h"
 #include <type_traits>
 #include "parser.h"
 #include "symbol/function_symbol.h"

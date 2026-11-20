@@ -2,9 +2,7 @@
 
 #include "symbol_table.h"
 #include "chunk.h"
-#include "stackable.h"
 #include "scope_context.h"
-#include "inline_operand.h"
 #include "stack_ex.h"
 
 class translation_module;

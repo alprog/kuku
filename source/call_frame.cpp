@@ -5,5 +5,4 @@ call_frame::call_frame(rt::function& function, cell* stack)
 	, stack { stack }
 {
 	ip = function.bytecode.get_start_pointer();
-	constants = function.constant_buffer.begin()._Ptr - 128;
 }

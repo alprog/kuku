@@ -5,7 +5,6 @@
 #include <vector>
 #include "statement_scope.h"
 #include "symbol_type.h"
-#include "typesystem/info.h"
 
 class symbol_reference;
 

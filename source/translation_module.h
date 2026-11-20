@@ -5,7 +5,6 @@
 #include "text_document.h"
 #include "token.h"
 #include "stmt/statement.h"
-#include "typesystem/storage.h"
 #include "lsp/diagnostic.h"
 #include "bytecode.h"
 #include "chunk.h"
@@ -45,5 +44,4 @@ public:
 
 	statement_scope root_scope;
 
-	typesystem::storage udt_storage;
 };

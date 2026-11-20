@@ -3,8 +3,6 @@
 #include "stack.h"
 #include "cell.h"
 #include "type_registry.h"
-#include "data_type.h"
-#include "instance.h"
 #include "object_storage.h"
 #include "routine.h"
 
