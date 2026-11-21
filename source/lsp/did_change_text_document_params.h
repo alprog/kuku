@@ -2,8 +2,8 @@
 #pragma once
 
 #include <vector>
-#include "json/serializable.h"
-#include "json/scheme.h"
+#include "core/json/serializable.h"
+#include "core/json/scheme.h"
 #include "lsp/text_document_content_change_event.h"
 #include "lsp/versioned_text_document_identifier.h"
 

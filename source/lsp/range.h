@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "json/serializable.h"
+#include "core/json/serializable.h"
 #include "lsp/position.h"
 
 namespace lsp

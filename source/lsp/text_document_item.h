@@ -2,8 +2,8 @@
 #pragma once
 
 #include <string>
-#include "json/serializable.h"
-#include "json/scheme.h"
+#include "core/json/serializable.h"
+#include "core/json/scheme.h"
 
 namespace lsp
 {
