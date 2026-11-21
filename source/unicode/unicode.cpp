@@ -1,6 +1,5 @@
 
 #include "unicode.h"
-#include "cell.h"
 
 constexpr int COUNT_7_BIT = 128;
 constexpr int COUNT_11_BIT = 2048;

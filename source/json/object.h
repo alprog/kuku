@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include "nlohmann/json.h"
-#include "nlohmann/extension.h"
+#include "3rd-party/nlohmann/json.h"
+#include "3rd-party/nlohmann/extension.h"
 
 namespace json
 {
