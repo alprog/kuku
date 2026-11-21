@@ -7,22 +7,22 @@
 #include <fstream>
 #include "parser.h"
 
-#include "virtual_machine.h"
+#include "vm/virtual_machine.h"
 #include "string.h"
-#include "bytecode.h"
-#include "opcode.h"
-#include "routine.h"
+#include "vm/bytecode.h"
+#include "vm/opcode.h"
+#include "vm/routine.h"
 
 #include "source_project.h"
 
 #include "core/mem/tracker.h"
-#include "instructions.h"
+#include "vm/instructions.h"
 #include <memory>
 #include "core/base64.h"
 #include "core/guid.h"
 
 #include "core/console.h"
-#include "export_loader.h"
+#include "vm/export_loader.h"
 #include "imgui_window.h"
 
 void test()

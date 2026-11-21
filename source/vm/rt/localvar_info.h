@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include "type_index.h"
+#include "vm/type_index.h"
 
 namespace rt
 {

@@ -1,7 +1,7 @@
 
 #include "symbol.h"
 
-#include "symbol_table.h"
+#include "vm/symbol_table.h"
 #include "symbol_reference.h"
 #include "token.h"
 

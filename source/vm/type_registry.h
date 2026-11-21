@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "rt/user_class.h"
+#include "vm/rt/user_class.h"
 #include "symbol_table.h"
 
 class type_registry

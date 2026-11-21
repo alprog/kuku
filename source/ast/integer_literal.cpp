@@ -1,5 +1,5 @@
 #include "integer_literal.h"
-#include "instructions.h"
+#include "vm/instructions.h"
 #include "compiler.h"
 
 ast::integer_literal::integer_literal(token& token)

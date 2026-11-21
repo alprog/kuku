@@ -4,8 +4,8 @@
 #include "compiler.h"
 #include "translation_module.h"
 #include "err/statement_error.h"
-#include "bytecode.h"
-#include "instructions.h"
+#include "vm/bytecode.h"
+#include "vm/instructions.h"
 #include <algorithm>
 #include "core/unicode/unicode.h"
 

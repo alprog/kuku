@@ -3,9 +3,9 @@
 #include <string>
 #include <vector>
 #include "function.h"
-#include "data_type.h"
+#include "vm/data_type.h"
 #include "property.h"
-#include "instance.h"
+#include "vm/instance.h"
 
 namespace rt
 {

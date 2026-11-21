@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rt/function.h"
+#include "vm/rt/function.h"
 
 class chunk
 {

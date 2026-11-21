@@ -2,7 +2,7 @@
 
 #include "core/types.h"
 #include "instance.h"
-#include "kuku/string.h"
+#include "vm/kuku/string.h"
 
 namespace rt
 {

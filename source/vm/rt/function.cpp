@@ -1,11 +1,11 @@
 #include "function.h"
-#include "decompiler.h"
+#include "vm/decompiler.h"
 
 #include "core/console.h"
 #include "core/unicode/unicode.h"
 #include <format>
-#include "jump_table.h"
-#include "instructions.h"
+#include "vm/jump_table.h"
+#include "vm/instructions.h"
 #include <functional>
 
 const rt::localvar_info& rt::function::get_local_info(int instruction_offset, int stack_offset) const

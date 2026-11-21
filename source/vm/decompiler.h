@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-#include "rt/function.h"
+#include "vm/rt/function.h"
 
 class decompiler
 {

@@ -1,10 +1,10 @@
 #pragma once
 
 #include <string>
-#include "bytecode.h"
+#include "vm/bytecode.h"
 #include "localvar_info.h"
-#include "opcode.h"
-#include "cell.h"
+#include "vm/opcode.h"
+#include "vm/cell.h"
 
 namespace rt
 {

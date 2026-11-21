@@ -9,8 +9,8 @@
 #include <sstream>
 
 #include "source_project.h"
-#include "virtual_machine.h"
-#include "bytecode.h"
+#include "vm/virtual_machine.h"
+#include "vm/bytecode.h"
 
 void repl() // read–eval–print loop
 {

@@ -6,8 +6,8 @@
 #include "token.h"
 #include "stmt/statement.h"
 #include "lsp/diagnostic.h"
-#include "bytecode.h"
-#include "chunk.h"
+#include "vm/bytecode.h"
+#include "vm/chunk.h"
 
 class source_project;
 

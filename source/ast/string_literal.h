@@ -3,7 +3,7 @@
 
 #include "expression.h"
 #include "Token.h"
-#include "kuku/string.h"
+#include "vm/kuku/string.h"
 
 namespace ast
 {

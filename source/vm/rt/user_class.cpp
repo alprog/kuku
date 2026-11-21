@@ -1,6 +1,6 @@
 #include "user_class.h"
 #include <iostream>
-#include "cell.h"
+#include "vm/cell.h"
 
 rt::user_class::user_class(std::string name)
     : name{name}

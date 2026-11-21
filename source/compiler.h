@@ -1,7 +1,7 @@
 #pragma once
 
-#include "symbol_table.h"
-#include "chunk.h"
+#include "vm/symbol_table.h"
+#include "vm/chunk.h"
 #include "scope_context.h"
 #include "core/stack_ex.h"
 

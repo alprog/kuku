@@ -3,7 +3,7 @@
 
 #include <map>
 #include "translation_module.h"
-#include "symbol_table.h"
+#include "vm/symbol_table.h"
 
 class source_project
 {

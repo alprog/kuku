@@ -1,7 +1,7 @@
 
 #include "instance.h"
 #include "cell.h"
-#include "rt/user_class.h"
+#include "vm/rt/user_class.h"
 
 void instance::dump()
 {
