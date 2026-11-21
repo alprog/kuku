@@ -23,9 +23,12 @@
 
 #include "console.h"
 #include "export_loader.h"
+#include "imgui_window.h"
 
 void test()
 {
+	start_imgui_window();
+
 	while (true)
 	{
 		virtual_machine machine;
