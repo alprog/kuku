@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include <types.h>
+#include <core/types.h>
 #include <vector>
-#include "guid.h"
+#include "core/guid.h"
 #include "cell.h"
 
 struct object_header

@@ -1,6 +1,6 @@
 #include "decompiler.h"
 
-#include "console.h"
+#include "core/console.h"
 #include <format>
 #include "jump_table.h"
 #include "instructions.h"

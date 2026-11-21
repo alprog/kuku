@@ -1,8 +1,8 @@
 
 #include "test.h"
 
-#include "streams.h"
-#include "unicode/unicode_streams.h"
+#include "core/streams.h"
+#include "core/unicode/unicode_streams.h"
 #include "text_document.h"
 #include <fstream>
 #include "parser.h"
@@ -15,13 +15,13 @@
 
 #include "source_project.h"
 
-#include "mem/tracker.h"
+#include "core/mem/tracker.h"
 #include "instructions.h"
 #include <memory>
-#include "base64.h"
-#include "guid.h"
+#include "core/base64.h"
+#include "core/guid.h"
 
-#include "console.h"
+#include "core/console.h"
 #include "export_loader.h"
 #include "imgui_window.h"
 

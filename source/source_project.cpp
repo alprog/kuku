@@ -1,6 +1,6 @@
 
 #include "source_project.h"
-#include "unicode/unicode_streams.h"
+#include "core/unicode/unicode_streams.h"
 
 source_project::~source_project()
 {

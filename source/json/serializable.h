@@ -2,7 +2,7 @@
 #pragma once
 
 #include <type_traits>
-#include "preprocessor/for_each.h"
+#include "core/preprocessor/for_each.h"
 #include "json/object.h"
 
 namespace json
@@ -19,7 +19,7 @@ namespace json
     };
 }
 
-#include "is_vector.h"
+#include "core/is_vector.h"
 
 template <typename T>
 concept vector_type = is_vector<T>::value;

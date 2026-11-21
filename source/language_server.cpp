@@ -3,10 +3,10 @@
 
 #include <iostream>
 #include <fstream>
-#include "types.h"
+#include "core/types.h"
 #include "lsp/enums.h"
 #include "lsp/text_document_item.h"
-#include "unicode/unicode.h"
+#include "core/unicode/unicode.h"
 #include "lsp/did_change_text_document_params.h"
 
 language_server::language_server()

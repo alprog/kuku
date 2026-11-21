@@ -2,7 +2,7 @@
 #include "translation_module.h"
 
 #include "source_project.h"
-#include "console.h"
+#include "core/console.h"
 #include "scope_analyzer.h"
 #include "semantic_analyzer.h"
 #include "export_creator.h"

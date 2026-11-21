@@ -3,7 +3,7 @@
 #include <vector>
 #include <string>
 
-#include "streams.h"
+#include "core/streams.h"
 #include "lsp/range.h"
 #include "lsp/text_document_content_change_event.h"
 

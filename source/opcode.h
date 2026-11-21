@@ -1,7 +1,7 @@
 #pragma once
 
-#include "types.h"
-#include "reflectable_enum.h"
+#include "core/types.h"
+#include "core/reflectable_enum.h"
 
 #define CODES2(X) X, X##_K
 #define CODES4(X) X, X##_KR, X##_RK, X##_KK

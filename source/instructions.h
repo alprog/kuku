@@ -5,7 +5,7 @@
 #include <iostream>
 #include "instruction_info.h"
 #include "virtual_machine.h"
-#include "preprocessor/for_each.h"
+#include "core/preprocessor/for_each.h"
 
 template <opcode Code>
 struct instruction : base_instruction

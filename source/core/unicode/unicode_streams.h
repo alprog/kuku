@@ -1,7 +1,7 @@
 #pragma once
 
 #include "unicode.h"
-#include "streams.h"
+#include "core/streams.h"
 #include <deque>
 
 namespace unicode

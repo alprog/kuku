@@ -3,7 +3,7 @@
 #include <string>
 #include "token.h"
 #include "token_type.h"
-#include "types.h"
+#include "core/types.h"
 #include "text_document.h"
 #include "source_iterator.h"
 

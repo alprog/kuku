@@ -3,7 +3,7 @@
 
 #include "json.h"
 
-#include "unicode/unicode_streams.h"
+#include "core/unicode/unicode_streams.h"
 
 namespace nlohmann
 {

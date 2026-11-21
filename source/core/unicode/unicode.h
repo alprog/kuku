@@ -1,10 +1,10 @@
 #pragma once
 
-#include "types.h"
+#include "core/types.h"
 #include <vector>
 #include <deque>
 #include <string>
-#include "streams.h"
+#include "core/streams.h"
 
 namespace unicode
 {

@@ -1,6 +1,6 @@
 
 #include "text_document.h"
-#include "utils.h"
+#include "core/utils.h"
 
 text_document::text_document()
 {

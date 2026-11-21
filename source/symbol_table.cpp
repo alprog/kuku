@@ -2,7 +2,7 @@
 #include "symbol_table.h"
 
 #define XXH_INLINE_ALL
-#include "xxhash.h"
+#include "3rd-party/xxhash/xxhash.h"
 
 uint64_t symbol_table::getHash(const std::string& name) const
 {

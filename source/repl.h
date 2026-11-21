@@ -2,9 +2,9 @@
 
 #include <iostream>
 #include "lexer.h";
-#include "console.h"
-#include "types.h"
-#include "unicode/unicode.h"
+#include "core/console.h"
+#include "core/types.h"
+#include "core/unicode/unicode.h"
 #include "text_document.h"
 #include <sstream>
 

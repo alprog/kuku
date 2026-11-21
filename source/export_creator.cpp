@@ -2,7 +2,7 @@
 
 #include "translation_module.h"
 #include "stmt/all.h"
-#include "unicode/unicode.h"
+#include "core/unicode/unicode.h"
 
 static std::string to_string(const std::u16string& text)
 {

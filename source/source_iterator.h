@@ -1,8 +1,8 @@
 #pragma once
 
 #include <vector>
-#include "types.h"
-#include "encoding.h"
+#include "core/types.h"
+#include "core/encoding.h"
 #include "lsp/position.h"
 
 class text_document;

@@ -1,7 +1,7 @@
 
 #include "parser.h"
-#include "console.h"
-#include "unexepected_error.h"
+#include "core/console.h"
+#include "core/unexepected_error.h"
 #include "source_project.h"
 #include "symbol_reference.h"
 #include "stmt/all.h"

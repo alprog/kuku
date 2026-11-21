@@ -2,7 +2,7 @@
 #include "lexer.h"
 
 #include <map>
-#include "console.h"
+#include "core/console.h"
 
 auto& get_keywords()
 {

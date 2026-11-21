@@ -7,7 +7,7 @@
 #include "bytecode.h"
 #include "instructions.h"
 #include <algorithm>
-#include "unicode/unicode.h"
+#include "core/unicode/unicode.h"
 
 compiler::compiler(translation_module& module)
 	: module{ module }

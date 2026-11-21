@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "scope_type.h"
-#include "types.h"
+#include "core/types.h"
 
 class symbol;
 

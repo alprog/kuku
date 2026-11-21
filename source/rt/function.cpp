@@ -1,8 +1,8 @@
 #include "function.h"
 #include "decompiler.h"
 
-#include "console.h"
-#include "unicode/unicode.h"
+#include "core/console.h"
+#include "core/unicode/unicode.h"
 #include <format>
 #include "jump_table.h"
 #include "instructions.h"

@@ -3,7 +3,7 @@
 #include "symbol_table.h"
 #include "chunk.h"
 #include "scope_context.h"
-#include "stack_ex.h"
+#include "core/stack_ex.h"
 
 class translation_module;
 

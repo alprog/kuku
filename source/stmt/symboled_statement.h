@@ -7,7 +7,7 @@
 #include <type_traits>
 #include "parser.h"
 #include "symbol/function_symbol.h"
-#include "castable_unique_ptr.h"
+#include "core/castable_unique_ptr.h"
 
 namespace stmt
 {
