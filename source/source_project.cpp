@@ -34,6 +34,10 @@ void source_project::add_memory_snippet(std::u16string line)
 	modules["memory"] = new translation_module(*this, "memory", basic_stream);
 }
 
+void source_project::update_workspace_folder(std::string uri, bool added)
+{
+}
+
 void source_project::process_all()
 {
 	for (auto& pair : modules)

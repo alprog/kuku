@@ -15,6 +15,8 @@ public:
 	void add_file(std::string uri, std::u16string content);
 	void add_memory_snippet(std::u16string snippet);
 
+	void update_workspace_folder(std::string uri, bool added);
+
 	void process_all();
 	void clear_all();
 

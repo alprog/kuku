@@ -37,6 +37,8 @@ void language_server::process_message(json::object& message)
         on_code_action(message);
     else if (method == "workspace/executeCommand")
         on_execute_with_command(message);
+    else if (method == "workspace/didChangeWorkspaceFolders")
+        on_did_change_workspace_folders(message);
     else if (method == "textDocument/completion")
         on_completion(message);
     else if (method == "$/cancelRequest")
@@ -49,6 +51,12 @@ void language_server::on_initialize(json::object& message)
 {
     auto name = message["params"]["clientInfo"]["name"].get<std::string>();
 
+    auto& folders = message["params"]["workspaceFolders"];
+    if (folders.is_array())
+    {
+        update_workspace_folders(folders, true);
+    }
+
     auto id = message["id"].get<int>();
 
     json::object result = {
@@ -59,7 +67,8 @@ void language_server::on_initialize(json::object& message)
             }},
             { "workspace", {
                 { "workspaceFolders", {
-                    { "supported", true }
+                    { "supported", true },
+                    { "changeNotifications", true }
                 }}
             }},
             { "hoverProvider", true },
@@ -85,6 +94,13 @@ void language_server::on_initialize(json::object& message)
     };
 
     ide_connection << response;
+}
+
+void language_server::on_did_change_workspace_folders(json::object& message)
+{
+    auto& event = message["params"]["event"];
+    update_workspace_folders(event["removed"], false);
+    update_workspace_folders(event["added"], true);
 }
 
 void language_server::on_did_open(json::object& message)
@@ -260,6 +276,32 @@ void language_server::on_execute_with_command(json::object& message)
     ide_connection << response;
 }
 
+void language_server::on_completion(json::object& message)
+{
+    /*
+       "textDocument": {
+           "uri": "file:///c%3A/Users/alpro/Desktop/2.txt",
+           "version": 4
+       },
+       "contentChanges": [
+           {
+               "range": {
+                   "start": {
+                       "line": 5,
+                       "character": 1
+                   },
+                   "end": {
+                       "line": 5,
+                       "character": 1
+                   }
+               },
+               "rangeLength": 0,
+               "text": "A"
+           }
+       ]
+   */
+}
+
 void language_server::show_message(std::string text)
 {
     json::object params = {
@@ -298,28 +340,10 @@ void language_server::publish_diagnostics(translation_module& module)
     ide_connection << notification;
 }
 
-void language_server::on_completion(json::object& message)
+void language_server::update_workspace_folders(json::object& folders, bool added)
 {
-     /*
-        "textDocument": {
-            "uri": "file:///c%3A/Users/alpro/Desktop/2.txt",
-            "version": 4
-        },
-        "contentChanges": [
-            {
-                "range": {
-                    "start": {
-                        "line": 5,
-                        "character": 1
-                    },
-                    "end": {
-                        "line": 5,
-                        "character": 1
-                    }
-                },
-                "rangeLength": 0,
-                "text": "A"
-            }
-        ]
-    */
+    for (auto& folder : folders)
+    {
+        source_project.update_workspace_folder(folder["uri"].get<std::string>(), added);
+    }
 }

@@ -13,6 +13,7 @@ public:
 private:
 	void process_message(json::object& message);
 	void on_initialize(json::object& message);
+	void on_did_change_workspace_folders(json::object& message);
 	void on_did_open(json::object& message);
 	void on_did_change(json::object& message);
 	void on_hover(json::object& message);
@@ -22,6 +23,7 @@ private:
 
 	void show_message(std::string text);
 	void publish_diagnostics(translation_module& module);
+	void update_workspace_folders(json::object& folders, bool added);
 
 	source_project source_project;
 	Ide_connection ide_connection;
